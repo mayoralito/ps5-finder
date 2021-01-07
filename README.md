@@ -32,6 +32,7 @@ python -m pip install -r requirements.txt
 ## Issues
 
 - On macOS you might need to accept manually to run `chromedriver` on your computer using the Security & Privacy under General tab.
+- You would have to expose the `chromedriver` file to PATH so it's accessible for execution
 
 
 
@@ -50,11 +51,17 @@ Full tutorial https://realpython.com/python-send-email/
 export EMAIL_TO = "email@domain.com"
 export EMAIL_SOURCE = "<your-email@gmail.com>"
 read -s EMAIL_SOURCE_PASSWORD
-export EMAIL_SOURCE_PASSWORD
-python target.py
 ```
 
+then
+
 ```sh
+export EMAIL_SOURCE_PASSWORD
+```
+
+And finally launch the script
+```sh
+python target.py
 ```
 
 You can set a cron job and trigger the script, remember to set the environment vairables before running the script.

@@ -28,7 +28,8 @@ def ps5_search_for_stock(email_to):
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
 
-    service = Service('./chromedriver')
+    service = Service('chromedriver')
+    print("Configuring driver via Service")
     service.start()
     driver = webdriver.Remote(
         command_executor=service.service_url, 
@@ -38,13 +39,17 @@ def ps5_search_for_stock(email_to):
 
     driver.implicitly_wait(5)
 
-    driver.get('https://www.target.com/')
+    source_url = 'https://www.target.com/'
+    driver.get(source_url)
+    print("Getting address " + source_url)
     # driver.get('https://www.target.com/p/playstation-5-console/-/A-81114595')
 
-    search_input = driver.find_elements_by_css_selector("input[name=\"searchTerm\"]")[0]
-
+    search_input = driver.find_elements_by_css_selector("input[name=\"searchTerm\"]")[0]    
     time.sleep(1)
-    search_input.send_keys("ps5 console")
+
+    search_term = "ps5 console"
+    search_input.send_keys(search_term)
+    print("Searching term " + search_term)
     time.sleep(1)
 
     # checkbox = driver.find_elements_by_css_selector("div.icheckbox")[0]
@@ -56,6 +61,7 @@ def ps5_search_for_stock(email_to):
     # login_button.click()
     # time.sleep(5)
 
+    print("Trying to submit()")
     search_form = driver.find_element_by_xpath('//*[@id="search"]')
     search_form.submit()
     time.sleep(3)
@@ -64,6 +70,7 @@ def ps5_search_for_stock(email_to):
     # driver.implicitly_wait(7) # seconds
     # Find a way to do implicit wait if the page has been reloaded.
 
+    print("Trying to get clickable element to display overlay.")
     ps5_element = driver.find_element_by_xpath('//*[@id="mainContainer"]/div[2]/div[1]/a[1]')
     ps5_element.click()
     time.sleep(2)
@@ -77,11 +84,13 @@ def ps5_search_for_stock(email_to):
     # ps5_overlay_close_button = driver.find_elements_by_css_selector('ul[data-test="shoppableDrawer-productList"]')[0]
     # ps5_overlay_first_item_button = driver.find_element_by_xpath('//*[@data-test="shoppableDrawer-productList"]/li[1]/div[1]/div[2]/div[1]/div[2]/div[2]/div[1]/')
     # ps5_overlay_first_item_button = driver.find_element_by_xpath('//*[@data-test="addButton"]')
+    print("Diving into overlay options AND click()")
     ps5_overlay_first_item_button = driver.find_elements_by_css_selector('.overlay--opened.overlay button[data-test="addButton"]')[1]
     ps5_overlay_first_item_button.click()
     time.sleep(2)
 
     # Check for current store
+    print("Checking storeAvailabilityStoreCard")
     ps5_current_store = driver.find_elements_by_css_selector('div[data-test="storeAvailabilityStoreCard"]')
     time.sleep(1)
 
@@ -89,9 +98,11 @@ def ps5_search_for_stock(email_to):
     # ps5_current_name = ps5_current_store[2]
     # print(ps5_current_name)
     store_count = 0
-    file_name =  "latest-scan.txt"
+    file_name =  "/tmp/latest-scan.txt"
+    print("Writing latest scan on " + file_name)
     with open(file_name, "w") as text_file:
         text_file.write("\n-------------\n[INI::AUTO-GENERATED REPORT] - %s" % (current_time))
+        print("Processing ps5_current_store content, current items: " + str(len(ps5_current_store)))
         for ele in ps5_current_store:
             
             storeFindingStatus = ele.text
