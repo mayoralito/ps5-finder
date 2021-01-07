@@ -61,7 +61,7 @@ export EMAIL_SOURCE_PASSWORD
 
 And finally launch the script
 ```sh
-python target.py
+python launcher.py
 ```
 
 You can set a cron job and trigger the script, remember to set the environment vairables before running the script.
