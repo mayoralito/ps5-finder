@@ -7,6 +7,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from fake_useragent import UserAgent
 
 import pickle
 import time
@@ -28,6 +29,18 @@ def ps5_search_for_stock(email_to):
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
 
+    # chrome_options.add_argument('--disable-gpu')
+    # chrome_options.add_argument('--remote-debugging-port=9222') 
+    # chrome_options.add_argument('--lang=en-US') 
+
+    ua = UserAgent()
+    userAgent = ua.random
+    print(userAgent)
+    chrome_options.add_argument(f'user-agent={userAgent}')
+
+    # chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    # chrome_options.add_experimental_option('useAutomationExtension', False)
+
     Time_Out=10
 
     service = Service('chromedriver')
@@ -39,16 +52,17 @@ def ps5_search_for_stock(email_to):
         desired_capabilities = {'browserName': 'chrome'},
         options=chrome_options
     )
-    print("Loading Remote config and waiting 3 seconds...")
-    driver.set_page_load_timeout(Time_Out)
-    driver.implicitly_wait(3)
+    # driver.implicitly_wait(3)
 
     source_url = 'https://www.target.com/'
     try:
-       driver.get(source_url)
-       print("Getting address " + source_url)
-    except TimeoutException:
-        print("Couldn't load the page")
+        print("Trying to load " + source_url)
+        driver.set_page_load_timeout(Time_Out)
+        driver.get(source_url)
+        print("Getting address " + source_url)
+    except TimeoutException as exception:
+        print("Couldn't load the page.")
+        print(exception)
         driver.close()
         return 
     
