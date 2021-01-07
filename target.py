@@ -28,20 +28,30 @@ def ps5_search_for_stock(email_to):
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
 
+    Time_Out=10
+
     service = Service('chromedriver')
     print("Configuring driver via Service")
     service.start()
+    print("Starting the chromedriver")
     driver = webdriver.Remote(
         command_executor=service.service_url, 
         desired_capabilities = {'browserName': 'chrome'},
         options=chrome_options
     )
-
-    driver.implicitly_wait(5)
+    print("Loading Remote config and waiting 3 seconds...")
+    driver.set_page_load_timeout(Time_Out)
+    driver.implicitly_wait(3)
 
     source_url = 'https://www.target.com/'
-    driver.get(source_url)
-    print("Getting address " + source_url)
+    try:
+       driver.get(source_url)
+       print("Getting address " + source_url)
+    except TimeoutException:
+        print("Couldn't load the page")
+        driver.close()
+        return 
+    
     # driver.get('https://www.target.com/p/playstation-5-console/-/A-81114595')
 
     search_input = driver.find_elements_by_css_selector("input[name=\"searchTerm\"]")[0]    
@@ -137,5 +147,6 @@ def ps5_search_for_stock(email_to):
         script_end_at = datetime.now()
         elapsed = script_end_at - script_start_at # yields a timedelta object
         print("Script done, took ", elapsed.seconds, " seconds")
+        driver.quit()
 
     return
