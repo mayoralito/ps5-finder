@@ -5,8 +5,7 @@ In order to run the program you would need
 - Python 3
 - install dependencies
 - Google Chrome / Chromium (need to check this one)
-- ChromeDriver - WebDriver for Chrome - https://sites.google.com/a/chromium.org/chromedriver/downloads (Follow the instructions in the website)
-	- or you can visit https://sites.google.com/a/chromium.org/chromedriver/getting-started
+- ChromeDriver - WebDriver for Chrome - https://sites.google.com/chromium.org/driver/
 
 ## Creating Virtual Environment
 
